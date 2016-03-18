@@ -8,21 +8,24 @@ Script based on GetWx script http://woody.cowpi.com/phpscripts/getwx.php.txt by 
 ```php
 require_once 'src/Metar.php';
 
-// Create class instance for parse raw METAR string with debug output enable
-$metar = new Metar('UWSS 231500Z 14007MPS 9999 -SHRA BR BKN033CB OVC066 03/M02 Q1019 R12/220395 NOSIG RMK QFE752', FALSE, TRUE);
+// Raw METAR code string
+$raw = 'UWSS 231500Z 14007MPS 9999 -SHRA BR BKN033CB OVC066 03/M02 Q1019 R12/220395 NOSIG RMK QFE752';
 
-// Get parsed METAR parameters as array
-$array = $metar->parse();
+// Create class instance for parse METAR string with debug output enable
+$metar = new Metar($raw, FALSE, TRUE);
 
-print_r($array);
+// Parse METAR
+$parameters = $metar->parse();
 
-// Get debug information as array
+print_r($parameters); // get parsed parameters as array
+
+// Debug information
 $debug = $metar->debug();
 
-print_r($debug);
+print_r($debug); // get debug information as array
 
-// Get any METAR parsed parameter (e.g. 'clouds_report')
-echo $array->clouds_report;
+// Get any parsed parameter, e.g. 'clouds_report'
+echo $metar->clouds_report;
 ```
 
 ### Demonstration
