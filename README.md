@@ -4,6 +4,27 @@ This script is a PHP library which allows to parse the METAR and TAF code, and c
 
 Script based on GetWx script http://woody.cowpi.com/phpscripts/getwx.php.txt by Mark Woodward.
 
+### Usage example:
+```php
+require_once 'src/Metar.php';
+
+// Create class instance for parse raw METAR string with debug output enable
+$metar = new Metar('UWSS 231500Z 14007MPS 9999 -SHRA BR BKN033CB OVC066 03/M02 Q1019 R12/220395 NOSIG RMK QFE752', FALSE, TRUE);
+
+// Get parsed METAR parameters as array
+$array = $metar->parse();
+
+print_r($array);
+
+// Get debug information as array
+$debug = $metar->debug();
+
+print_r($debug);
+
+// Get any METAR parsed parameter (e.g. 'clouds_report')
+echo $array->clouds_report;
+```
+
 ### Demonstration
 - http://www.hsdn.info/wdparser/metar/
 
