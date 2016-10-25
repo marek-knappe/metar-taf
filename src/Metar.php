@@ -4,7 +4,7 @@
 	HSDN METAR/TAF Parser Class
 	===========================
 
-	Version: 0.55.3b
+	Version: 0.55.4b
 
 	Based on GetWx script by Mark Woodward.
 
@@ -332,12 +332,12 @@ class Metar
 	 * UBBB 251900Z 34015KT 9999 FEW013 BKN030 16/14 Q1016 88CLRD70 NOSIG
 	 * UMMS 251936Z 19002MPS 9999 SCT006 OVC026 06/05 Q1015 R31/D NOSIG RMK QBB080 OFE745
 	 */
-	public function __construct($raw, $taf = FALSE, $debug = FALSE)
+	public function __construct($raw, $taf = FALSE, $debug = FALSE, $icao = TRUE)
 	{
 		$this->debug_enabled = $debug;
 
 		// Raw is a ICAO code
-		if (preg_match('@^([A-Z]{1}[A-Z0-9]{3})$@', $raw))
+		if ($icao AND preg_match('@^([A-Z]{1}[A-Z0-9]{3})$@', $raw))
 		{
 			$raw = $this->download_raw($raw, $taf);
 		}
@@ -1526,7 +1526,7 @@ class Metar
 		else
 		{
 			$class  = __CLASS__;
-			$parser = new $class(implode(' ', $raw_parts), TRUE, $this->debug_enabled);
+			$parser = new $class(implode(' ', $raw_parts), TRUE, $this->debug_enabled, FALSE);
 
 			if ($parsed = $parser->parse())
 			{
