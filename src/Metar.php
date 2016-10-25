@@ -4,7 +4,7 @@
 	HSDN METAR/TAF Parser Class
 	===========================
 
-	Version: 0.55.2b
+	Version: 0.55.3b
 
 	Based on GetWx script by Mark Woodward.
 
@@ -480,11 +480,11 @@ class Metar
 	{
 		if ($taf)
 		{
-			$url = 'http://weather.noaa.gov/pub/data/forecasts/taf/stations/'.$icao.'.TXT';
+			$url = 'http://tgftp.nws.noaa.gov/data/forecasts/taf/stations/'.$icao.'.TXT';
 		}
 		else
 		{
-			$url = 'http://weather.noaa.gov/pub/data/observations/metar/stations/'.$icao.'.TXT';
+			$url = 'http://tgftp.nws.noaa.gov/data/observations/metar/stations/'.$icao.'.TXT';
 		}
 
 		if (!$raw = @file_get_contents($url))
