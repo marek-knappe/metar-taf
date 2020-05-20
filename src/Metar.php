@@ -4,11 +4,11 @@
 	HSDN METAR/TAF Parser Class
 	===========================
 
-	Version: 0.55.4b
+	Version: 0.55.5b
 
 	Based on GetWx script by Mark Woodward.
 
-	(c) 2013-2015, Information Networks, Ltd. (http://www.hsdn.org/)
+	(c) 2013-2020, Information Networks, Ltd. (http://www.hsdn.org/)
 	(c) 2001-2006, Mark Woodward (http://woody.cowpi.com/phpscripts/)
 
 		This script is a PHP library which allows to parse the METAR and TAF code,
@@ -140,7 +140,7 @@ class Metar
 		'SN' => 'snow',
 		'SG' => 'snow grains',
 		'IC' => 'ice crystals',
-		'PE' => 'ice pellets',
+		'PL' => 'ice pellets',
 		'GR' => 'hail',
 		'GS' => 'small hail', // and/or snow pellets
 		'UP' => 'unknown',
