@@ -29,12 +29,12 @@ echo $metar->clouds_report;
 ```
 
 ### Demonstration
-- http://www.hsdn.info/wdparser/metar/
+- http://dev.hsdn.org/wdparser/metar/
 
 ### License
     HSDN METAR/TAF Parser Class
 
-    Copyright (C) 2013-2015, Information Networks, Ltd.
+    Copyright (C) 2013-2020, Information Networks, Ltd.
     Copyright (C) 2001-2006, Mark Woodward
 
     This program is free software: you can redistribute it and/or modify
