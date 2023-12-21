@@ -4,7 +4,7 @@
 	HSDN METAR/TAF Parser Class
 	===========================
 
-	Version: 0.55.5b
+	Version: 0.55.6b
 
 	Based on GetWx script by Mark Woodward.
 
