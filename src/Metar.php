@@ -54,7 +54,9 @@ class Metar
 		'present_weather_report'   => NULL,
 		'clouds'                   => NULL,
 		'clouds_report'            => NULL,
+		'clouds_report_ft'         => NULL,
 		'cloud_height'             => NULL,
+		'cloud_height_ft'          => NULL,
 		'cavok'                    => NULL,
 		'temperature'              => NULL,
 		'temperature_f'            => NULL,
@@ -1014,10 +1016,11 @@ class Metar
 
 		$observed = array
 		(
-			'amount' => NULL,
-			'height' => NULL,
-			'type'   => NULL,
-			'report' => NULL,
+			'amount'    => NULL,
+			'height'    => NULL,
+			'height_ft' => NULL,
+			'type'      => NULL,
+			'report'    => NULL,
 		);
 
 		// Clear skies or no observation
@@ -1032,11 +1035,14 @@ class Metar
 		elseif (isset($found[5]) AND !empty($found[5]))
 		{
 			$observed['height'] = $this->convert_distance($found[5] * 100, 'FT'); // convert feet to meters
+			$observed['height_ft'] = $found[5] * 100;
 
 			// Cloud height
 			if (is_null($this->result['cloud_height']) OR $observed['height'] < $this->result['cloud_height'])
 			{
 				$this->set_result_value('cloud_height', $observed['height']);
+				$this->set_result_value('cloud_height_ft', $observed['height_ft']);
+				
 			}
 
 			if (isset($this->cloud_codes[$found[4]]))
@@ -1058,26 +1064,44 @@ class Metar
 		if (!is_null($observed['amount']))
 		{
 			$report = array();
+			$report_ft = array();
 
 			$report[] = $this->cloud_codes[$observed['amount']];
+			$report_ft[] = $this->cloud_codes[$observed['amount']];
 
 			if ($observed['height'])
 			{
 				if (!is_null($observed['type']))
 				{
 					$report[] = 'at '.$observed['height'].' meters, '.$this->cloud_type_codes[$observed['type']];
+					
 				}
 				else
 				{
 					$report[] = 'at '.$observed['height'].' meters';
 				}
 			}
-
+			if ($observed['height_ft'])
+			{
+				if (!is_null($observed['type']))
+				{
+					$report_ft[] = 'at '.$observed['height_ft'].' feet, '.$this->cloud_type_codes[$observed['type']];
+					
+				}
+				else
+				{
+					$report_ft[] = 'at '.$observed['height_ft'].' feet';
+				}
+			}
 			$report = implode(' ', $report);
+			$report_ft = implode(' ', $report_ft);
 
 			$observed['report'] = ucfirst($report);
+			$observed['report_ft'] = ucfirst($report_ft);
 
 			$this->set_result_report('clouds_report', $report);
+			$this->set_result_report('clouds_report_ft', $report_ft);
+			
 		}
 
 		$this->set_result_group('clouds', $observed);
