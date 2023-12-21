@@ -1007,7 +1007,7 @@ class Metar
 	 */
 	private function get_clouds($part)
 	{
-		if (!preg_match('@^((NSW|NSC|NCD|CLR|SKC|NOBS)|((VV|FEW|SCT|BKN|OVC|///)([0-9]{3}|///)(CB|TCU|///)?))$@', $part, $found))
+		if (!preg_match('@^((NSW|NSC|NCD|CLR|SKC|NOBS|//////)|((VV|FEW|SCT|BKN|OVC|///)([0-9]{3}|///)(CB|TCU|///)?))$@', $part, $found))
 		{
 			return FALSE;
 		}
