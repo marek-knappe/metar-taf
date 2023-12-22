@@ -37,7 +37,9 @@ class Metar
 		'observed_time'            => NULL,
 		'observed_age'             => NULL,
 		'wind_speed'               => NULL,
-		'wind_gust_speed'          => NULL,
+		'wind_speed_kt'            => NULL,
+		'wind_gust_speed'          => NULL,		
+		'wind_gust_speed_kt'       => NULL,
 		'wind_direction'           => NULL,
 		'wind_direction_label'     => NULL,
 		'wind_direction_varies'    => NULL,
@@ -725,6 +727,7 @@ class Metar
 
 			// Speed
 			$this->set_result_value('wind_speed', $this->convert_speed($found[2], $unit));
+			$this->set_result_value('wind_speed_kt', $this->convert_speed($found[2], $unit, 'KT'));
 
 			// Direction
 			if ($found[1] == 'VRB')
@@ -746,6 +749,8 @@ class Metar
 			if (isset($found[4]) AND !empty($found[4]))
 			{
 				$this->set_result_value('wind_gust_speed', $this->convert_speed($found[4], $unit));
+				$this->set_result_value('wind_gust_speed_kt', $this->convert_speed($found[4], $unit, 'KT'));
+
 			}
 		}
 
@@ -1795,53 +1800,62 @@ class Metar
 	}
 
 	/**
-	 * Convert wind speed into meters per second.
-	 * Some other common conversion factors:
+	 * Convert speed between different units.
+	 *
 	 *   1 mi/hr = 0.868976 knots  = 0.000447 km/hr = 0.44704  m/s  = 1.466667 ft/s
 	 *   1 ft/s  = 0.592483 knots  = 1.097279 km/hr = 0.304799 m/s  = 0.681818 mi/hr
 	 *   1 knot  = 1.852    km/hr  = 0.514444 m/s   = 1.687809 ft/s = 1.150779 mi/hr
 	 *   1 km/hr = 0.539957 knots  = 0.277778 m/s   = 0.911344 ft/s = 0.621371 mi/hr
 	 *   1 m/s   = 1.943844 knots  = 3.6      km/h  = 3.28084  ft/s = 2.236936 mi/hr
+	 * 
+	 * @param float $speed The speed value to be converted.
+	 * @param string $from_unit The unit of the input speed (e.g., 'KT', 'KPH', 'MPS').
+	 * @param string $return_unit The desired unit for the converted speed (e.g., 'KT', 'KPH', 'MPS').
+	 *
+	 * @return float|null The converted speed or null if the units are not recognized.
 	 */
-	private function convert_speed($speed, $unit)
+	private function convert_speed($speed, $from_unit, $return_unit='MPS')
 	{
-		switch ($unit)
-		{
-			case 'KT':
-				return round(0.514444 * $speed, 2); // from knots
+		$conversion_factors = [
+			'KT'  => ['KT' => 1,      'KPH' => 1.852,   'MPS' => 0.514444],
+			'KPH' => ['KT' => 0.539957, 'KPH' => 1,      'MPS' => 0.277778],
+			'MPS' => ['KT' => 1.943844, 'KPH' => 3.6,    'MPS' => 1],
+		];
 
-			case 'KPH':
-				return round(0.277778 * $speed, 2); // from km/h
-
-			case 'MPS':
-				return round($speed, 2); // m/s
+		if (!isset($conversion_factors[$from_unit]) || !isset($conversion_factors[$return_unit])) {
+			return null; // Units not recognized
 		}
 
-		return NULL;
+		$conversion_factor = $conversion_factors[$from_unit][$return_unit];
+		return round($conversion_factor * $speed, 2);
 	}
 
 	/**
-	 * Convert distance into meters.
-	 * Some other common conversion factors:
+	 * Convert distance between different units.
 	 *   1 m  = 3.28084 ft = 0.00062 mi
 	 *   1 ft = 0.3048 m   = 0.00019 mi
 	 *   1 mi = 5279.99 ft = 1609.34 m
+	 * 
+	 * @param float $distance The distance value to be converted.
+	 * @param string $from_unit The unit of the input distance (e.g., 'FT', 'SM', 'M').
+	 * @param string $return_unit The desired unit for the converted distance (e.g., 'FT', 'SM', 'M').
+	 *
+	 * @return float|null The converted distance or null if the units are not recognized.
 	 */
-	private function convert_distance($distance, $unit)
+	private function convert_distance($distance, $from_unit, $return_unit='M')
 	{
-		switch ($unit)
-		{
-			case 'FT':
-				return round(0.3048 * $distance); // from ft.
+		$conversion_factors = [
+			'FT' => ['FT' => 1,       'SM' => 0.000189394, 'M' => 0.3048],
+			'SM' => ['FT' => 5279.99, 'SM' => 1,          'M' => 1609.34],
+			'M'  => ['FT' => 3.28084, 'SM' => 0.000621371,'M' => 1],
+		];
 
-			case 'SM':
-				return round(1609.34 * $distance); // from miles
-
-			case 'M':
-				return round($distance); // meters
+		if (!isset($conversion_factors[$from_unit]) || !isset($conversion_factors[$return_unit])) {
+			return null; // Units not recognized
 		}
 
-		return NULL;
+		$conversion_factor = $conversion_factors[$from_unit][$return_unit];
+		return round($conversion_factor * $distance);
 	}
 
 	/**
