@@ -1,0 +1,33 @@
+name: PHP Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.2']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+
+    - name: Install Dependencies
+      run: composer install --no-progress --no-suggest --prefer-dist
+
+    - name: Run Tests
+      run: |
+        php -l src/Metar.php
+        # Add your tests here, for example:
+        # vendor/bin/phpunit
