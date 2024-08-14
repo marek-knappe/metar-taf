@@ -22,10 +22,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-version }}
-
-    - name: Install Dependencies
-      run: composer install --no-progress --no-suggest --prefer-dist
-
+        
     - name: Run Tests
       run: |
         php -l src/Metar.php
